@@ -1,7 +1,68 @@
 ﻿@page "/add"
+@using SpendInsights.Models
 
-<h1>Lägg till köp</h1>
+<h3>Skapa kvitto</h3>
 
-<button>Lägg till manuellt</button>
+<div class="mb-3">
+    <label class="form-label">Butik</label>
+    <input class="form-control" @bind="purchase.StoreName" />
+</div>
 
-<button>Scana kvitto</button>
+<div class="mb-3">
+    <label class="form-label">Datum</label>
+    <InputDate class="form-control" @bind-Value="purchase.PurchaseDate" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Kommentar</label>
+    <input class="form-control" @bind="purchase.Comment" />
+</div>
+
+<hr />
+
+<h4>Lägg till produkt</h4>
+
+<div class="mb-3">
+    <label class="form-label">Produktnamn</label>
+    <input class="form-control" @bind="newItem.ItemName" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Pris</label>
+    <InputNumber class="form-control" @bind-Value="newItem.Price" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Antal</label>
+    <InputNumber class="form-control" @bind-Value="newItem.Amount" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Vikt</label>
+    <InputNumber class="form-control" @bind-Value="newItem.Weight" />
+</div>
+
+<div>
+    <button class="btn btn-primary" @onclick="AddItem">
+    Lägg till produkt
+    </button>
+</div>
+
+<div>
+<button class="btn btn-accept">
+    Spara kvitto
+</button>
+</div>
+
+
+
+@code {
+    private Purchase purchase = new();
+    private PurchaseItem newItem = new();
+
+    private void AddItem()
+    {
+        purchase.Items.Add(newItem);
+        newItem = new PurchaseItem();
+    }
+}
