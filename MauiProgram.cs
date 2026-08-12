@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SpendInsights.Data;
 
 namespace SpendInsights
 {
@@ -19,6 +20,7 @@ namespace SpendInsights
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
+            builder.Services.AddSingleton<AppDatabase>();
 #endif
 
             return builder.Build();

@@ -1,8 +1,20 @@
 ﻿@page "/history"
+@using SpendInsights.Models
+@using SpendInsights.Data
+@inject AppDatabase Database
 
 <h1>Köphistorik</h1>
 
+@foreach (var purchase in purchases)
+{
+    <p>@purchase.StoreName -@purchase.PurchaseDate - @purchase.TotalSum kr</p>
+}
 
+@code {
+    private List<Purchase> purchases = [];
 
-
-
+    protected override async Task OnInitializedAsync()
+    {
+        purchases = await Database.GetPurchasesAsync();
+    }
+}
