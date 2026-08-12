@@ -7,11 +7,14 @@ namespace SpendInsights.Models
 
         public string StoreName { get; set; } = string.Empty;
 
+        
         public string Comment { get; set; } = string.Empty;
 
         public DateTime PurchaseDate { get; set; } = DateTime.Today;
 
         public List<PurchaseItem> Items { get; set; } = [];
+
+        public decimal TotalSum => Items.Sum(item => item.Price);
 
     }
 }

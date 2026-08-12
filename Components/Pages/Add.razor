@@ -48,7 +48,35 @@
     </button>
 </div>
 
+@if (purchase.Items.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produkt</th>
+                <th>Antal</th>
+                <th>Vikt</th>
+                <th>Pris</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in purchase.Items)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.Amount</td>
+                    <td>@item.Weight</td>
+                    <td>@item.Price kr</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+ <p><strong>Totalt: @purchase.TotalSum kr</strong></p>
+
 <div>
+
 <button class="btn btn-accept">
     Spara kvitto
 </button>
