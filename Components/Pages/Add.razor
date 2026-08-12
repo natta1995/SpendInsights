@@ -1,5 +1,7 @@
 ﻿@page "/add"
 @using SpendInsights.Models
+@using SpendInsights.Data
+@inject AppDatabase Database
 
 <h3>Skapa kvitto</h3>
 
@@ -76,8 +78,11 @@
  <p><strong>Totalt: @purchase.TotalSum kr</strong></p>
 
 <div>
-
-<button class="btn btn-accept">
+    @if (purchaseSaved)
+    {
+        <p>Kvittot är sparat!</p>
+    }
+    <button class="btn btn-accept" @onclick="SavePurchase">
     Spara kvitto
 </button>
 </div>
@@ -87,10 +92,17 @@
 @code {
     private Purchase purchase = new();
     private PurchaseItem newItem = new();
+    private bool purchaseSaved = false;
 
     private void AddItem()
     {
         purchase.Items.Add(newItem);
         newItem = new PurchaseItem();
+    }
+
+    private async Task SavePurchase()
+    {
+        await Database.SavePurchaseAsync(purchase);
+        purchaseSaved = true;
     }
 }
