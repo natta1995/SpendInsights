@@ -5,10 +5,28 @@
 
 <h1>Köphistorik</h1>
 
-@foreach (var purchase in purchases)
-{
-    <p>@purchase.StoreName -@purchase.PurchaseDate - @purchase.TotalSum kr</p>
-}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Butik</th>
+                <th>Datum</th>
+                <th>Summa</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var purchase in purchases)
+            {
+                <tr>
+                    <td>@purchase.StoreName</td>
+                    <td>@purchase.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                    <td>@purchase.TotalSum kr</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
 
 @code {
     private List<Purchase> purchases = [];
