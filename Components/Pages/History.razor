@@ -21,15 +21,61 @@
                     <td>@purchase.StoreName</td>
                     <td>@purchase.PurchaseDate.ToString("yyyy-MM-dd")</td>
                     <td>@purchase.TotalSum kr</td>
-
+                    <td>
+                    <button class="btn btn-sm btn-secondary" @onclick="() => TogglePurchase(purchase.Id)">
+                            Visa
+                        </button>
+                    </td>
                 </tr>
+            @if (expandedPurchaseId == purchase.Id)
+            {
+           
+            <thead>
+                <tr>
+                    <th>Vara</th>
+                    <th>Antal</th>
+                    <th>Vikt</th>
+                    <th>Pris</th>
+                </tr>
+            </thead>
+                <tr>
+                    <td colspan="4">
+                        @foreach (var item in purchase.Items)
+                        {
+                          <tr>
+
+                            <td>@item.ItemName</td>
+                            <td>@item.Amount st</td>
+                            <td>@item.Weight</td>
+                            <td>@item.Price kr</td>
+                            
+                          </tr>
+                        }
+                    </td>
+                </tr>
+             
             }
+            }
+
         </tbody>
     </table>
 
 
 @code {
     private List<Purchase> purchases = [];
+    private int? expandedPurchaseId;
+
+    private void TogglePurchase(int purchaseId)
+    {
+        if (expandedPurchaseId == purchaseId)
+        {
+            expandedPurchaseId = null;
+        }
+        else
+        {
+            expandedPurchaseId = purchaseId;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
