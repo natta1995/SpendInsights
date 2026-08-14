@@ -1,5 +1,23 @@
 ﻿@page "/"
+@using SpendInsights.Models
+@using SpendInsights.Data
+@inject AppDatabase Database
 
-<h1>Översikt</h1>
+
+<div>
+    <p>Antal köp: @purchases.Count</p>
+    <p>Totalt: @purchases.Sum(prop => prop.TotalSum) kr</p>
+
+</div>
 
 
+@code {
+   private List<Purchase> purchases = [];
+   
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        purchases = await Database.GetPurchasesAsync();
+    }
+}
