@@ -3,106 +3,205 @@
 @using SpendInsights.Data
 @inject AppDatabase Database
 
-<h3>Skapa kvitto</h3>
+<div class="receipt-page">
 
-<div class="mb-3">
-    <label class="form-label">Butik</label>
-    <input class="form-control" @bind="purchase.StoreName" />
-</div>
+    <div class="page-header">
+        <h3>Skapa kvitto</h3>
+        <p>Lägg till information om köpet och produkterna.</p>
+    </div>
 
-<div class="mb-3">
-    <label class="form-label">Datum</label>
-    <InputDate class="form-control" @bind-Value="purchase.PurchaseDate" />
-</div>
+    <div class="receipt-card">
 
-<div class="mb-3">
-    <label class="form-label">Kommentar</label>
-    <input class="form-control" @bind="purchase.Comment" />
-</div>
+        <div class="receipt-row">
+            <div class="form-field">
+                <label>Butik</label>
+                <input class="form-control"
+                       placeholder="Ex. ICA Maxi"
+                       @bind="purchase.StoreName" />
+            </div>
 
-<hr />
+            <div class="form-field">
+                <label>Datum</label>
+                <InputDate class="form-control"
+                           @bind-Value="purchase.PurchaseDate" />
+            </div>
+        </div>
 
-<h4>Lägg till produkt</h4>
+        <div class="form-field">
+            <label>Kommentar</label>
+            <textarea class="form-control comment-field"
+                      placeholder="Valfri kommentar..."
+                      @bind="purchase.Comment">
+            </textarea>
+        </div>
 
-<div class="mb-3">
-    <label class="form-label">Produktnamn</label>
-    <input class="form-control" @bind="newItem.ItemName" />
-</div>
+    </div>
 
-<div class="mb-3">
-    <label class="form-label">Pris</label>
-    <InputNumber class="form-control" @bind-Value="newItem.Price" />
-</div>
+    <div class="products-section">
 
-<div class="mb-3">
-    <label class="form-label">Antal</label>
-    <InputNumber class="form-control" @bind-Value="newItem.Amount" />
-</div>
+        <div class="products-header">
+            <h4>Produkter</h4>
 
-<div class="mb-3">
-    <label class="form-label">Vikt</label>
-    <InputNumber class="form-control" @bind-Value="newItem.Weight" />
-</div>
+            <button class="btn btn-primary add-product-btn"
+                    @onclick="OpenProductModal">
+                + Lägg till produkt
+            </button>
+        </div>
 
-<div>
-    <button class="btn btn-primary" @onclick="AddItem">
-    Lägg till produkt
-    </button>
-</div>
+        @if (purchase.Items.Any())
+        {
+            <div class="product-list">
+                @foreach (var item in purchase.Items)
+                {
+                    <div class="product-row">
 
-@if (purchase.Items.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Produkt</th>
-                <th>Antal</th>
-                <th>Vikt</th>
-                <th>Pris</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            @foreach (var item in purchase.Items)
-            {
-                <tr>
-                    <td>@item.ItemName</td>
-                    <td>@item.Amount</td>
-                    <td>@item.Weight</td>
-                    <td>@item.Price kr</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
- <p><strong>Totalt: @purchase.TotalSum kr</strong></p>
+                        <div class="product-name">
+                            @item.ItemName
+                        </div>
 
-<div>
+                        <div class="product-amount">
+                            @item.Amount st
+                        </div>
+
+                        <div class="product-delete" ">
+                            <button class="delete-item"
+                                    @onclick="() => RemoveItem(item)">
+                                ×
+                            </button>
+                        </div>
+
+                        <div class="product-price">
+                            @item.Price.ToString("0.00") kr
+                        </div>
+
+                   
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-products">
+                Inga produkter tillagda ännu.
+            </div>
+        }
+
+        <div class="total-row">
+            <span>Totalt</span>
+            <strong>@purchase.TotalSum.ToString("0.00") kr</strong>
+        </div>
+
+    </div>
+
     @if (purchaseSaved)
     {
-        <p>Kvittot är sparat!</p>
+        <div class="save-message">
+            Kvittot är sparat!
+        </div>
     }
-    <button class="btn btn-accept" @onclick="SavePurchase">
-    Spara kvitto
-</button>
+
+    <button class="save-button"
+            @onclick="SavePurchase">
+        Spara kvitto
+    </button>
+
 </div>
 
+
+@if (showProductModal)
+{
+    <div class="modal-backdrop-custom"
+         @onclick="CloseProductModal">
+
+        <div class="product-modal"
+             @onclick:stopPropagation>
+
+            <div class="modal-header-custom">
+                <h4>Lägg till produkt</h4>
+
+                <button class="close-button"
+                        @onclick="CloseProductModal">
+                    ×
+                </button>
+            </div>
+
+            <div class="form-field">
+                <label>Produktnamn</label>
+                <input class="form-control"
+                       placeholder="Ex. Köttfärs"
+                       @bind="newItem.ItemName" />
+            </div>
+
+            <div class="receipt-row">
+
+                <div class="form-field">
+                    <label>Antal</label>
+                    <InputNumber class="form-control"
+                                 @bind-Value="newItem.Amount" />
+                </div>
+
+                <div class="form-field">
+                    <label>Pris</label>
+                    <InputNumber class="form-control"
+                                 @bind-Value="newItem.Price" />
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+                <button class="cancel-button"
+                        @onclick="CloseProductModal">
+                    Avbryt
+                </button>
+
+                <button class="btn btn-primary"
+                        @onclick="AddItem">
+                    Lägg till
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
 
 
 @code {
+
     private Purchase purchase = new();
     private PurchaseItem newItem = new();
+
     private bool purchaseSaved = false;
+    private bool showProductModal = false;
+
+    private void OpenProductModal()
+    {
+        showProductModal = true;
+    }
+
+    private void CloseProductModal()
+    {
+        showProductModal = false;
+    }
 
     private void AddItem()
     {
         purchase.Items.Add(newItem);
+
         newItem = new PurchaseItem();
+
+        showProductModal = false;
+    }
+
+    private void RemoveItem(PurchaseItem item)
+    {
+        purchase.Items.Remove(item);
     }
 
     private async Task SavePurchase()
     {
         await Database.SavePurchaseAsync(purchase);
+
         purchaseSaved = true;
     }
 }

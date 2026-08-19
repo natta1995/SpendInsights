@@ -30,14 +30,7 @@
             @if (expandedPurchaseId == purchase.Id)
             {
            
-            <thead>
-                <tr>
-                    <th>Vara</th>
-                    <th>Antal</th>
-                    <th>Vikt</th>
-                    <th>Pris</th>
-                </tr>
-            </thead>
+        
                 <tr>
                     <td colspan="4">
                         @foreach (var item in purchase.Items)
@@ -46,7 +39,7 @@
 
                             <td>@item.ItemName</td>
                             <td>@item.Amount st</td>
-                            <td>@item.Weight</td>
+                            @* <td>@item.Weight</td> *@
                             <td>@item.Price kr</td>
                             
                           </tr>
