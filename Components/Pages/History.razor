@@ -3,56 +3,80 @@
 @using SpendInsights.Data
 @inject AppDatabase Database
 
-<h1>Köphistorik</h1>
+<div class="history-page">
+    <div class="history-header">
+        <h1>Köphistorik</h1>
+        <p>Se dina tidigare köp och vad de innehöll.</p>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Butik</th>
-                <th>Datum</th>
-                <th>Summa</th>
-            </tr>
-        </thead>
-
-        <tbody>
+    @if (purchases.Count == 0)
+    {
+        <div class="empty-state">
+            <p>Du har inga sparade köp ännu.</p>
+        </div>
+    }
+    else
+    {
+        <div class="purchase-list">
             @foreach (var purchase in purchases)
             {
-                <tr>
-                    <td>@purchase.StoreName</td>
-                    <td>@purchase.PurchaseDate.ToString("yyyy-MM-dd")</td>
-                    <td>@purchase.TotalSum kr</td>
-                    <td>
-                    <button class="btn btn-sm btn-secondary" @onclick="() => TogglePurchase(purchase.Id)">
-                            Visa
-                        </button>
-                    </td>
-                </tr>
-            @if (expandedPurchaseId == purchase.Id)
-            {
-           
-        
-                <tr>
-                    <td colspan="4">
-                        @foreach (var item in purchase.Items)
-                        {
-                          <tr>
+                <div class="purchase-card">
 
-                            <td>@item.ItemName</td>
-                            <td>@item.Amount st</td>
-                            @* <td>@item.Weight</td> *@
-                            <td>@item.Price kr</td>
-                            
-                          </tr>
-                        }
-                    </td>
-                </tr>
-             
+                    <button class="purchase-summary"
+                            @onclick="() => TogglePurchase(purchase.Id)">
+
+                        <div class="purchase-main">
+                            <span class="store-name">@purchase.StoreName</span>
+                            <span class="purchase-date">
+                                @purchase.PurchaseDate.ToString("dd MMMM yyyy")
+                            </span>
+                        </div>
+
+                        <div class="purchase-right">
+                            <span class="purchase-total">
+                                @purchase.TotalSum.ToString("0.00") kr
+                            </span>
+
+                            <span class="expand-icon">
+                                @(expandedPurchaseId == purchase.Id ? "▲" : "▼")
+                            </span>
+                        </div>
+                    </button>
+
+                    @if (expandedPurchaseId == purchase.Id)
+                    {
+                        <div class="purchase-details">
+                            @if (purchase.Items.Count == 0)
+                            {
+                                <p class="no-items">Inga produkter sparade.</p>
+                            }
+                            else
+                            {
+                                @foreach (var item in purchase.Items)
+                                {
+                                    <div class="purchase-item">
+                                        <div class="item-name">
+                                            @item.ItemName
+                                        </div>
+
+                                        <div class="item-amount">
+                                            @item.Amount st
+                                        </div>
+
+                                        <div class="item-price">
+                                            @item.Price.ToString("0.00") kr
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                </div>
             }
-            }
-
-        </tbody>
-    </table>
-
+        </div>
+    }
+</div>
 
 @code {
     private List<Purchase> purchases = [];
@@ -60,14 +84,10 @@
 
     private void TogglePurchase(int purchaseId)
     {
-        if (expandedPurchaseId == purchaseId)
-        {
-            expandedPurchaseId = null;
-        }
-        else
-        {
-            expandedPurchaseId = purchaseId;
-        }
+        expandedPurchaseId =
+            expandedPurchaseId == purchaseId
+                ? null
+                : purchaseId;
     }
 
     protected override async Task OnInitializedAsync()

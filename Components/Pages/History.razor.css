@@ -1,0 +1,129 @@
+﻿.history-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+.history-header {
+    margin-bottom: 24px;
+}
+
+    .history-header h1 {
+        margin-bottom: 6px;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .history-header p {
+        margin: 0;
+        color: #777;
+    }
+
+.purchase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.purchase-card {
+    background: white;
+    border: 1px solid #e6e6e6;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.purchase-summary {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    cursor: pointer;
+}
+
+    .purchase-summary:hover {
+        background: #f8f8f8;
+    }
+
+.purchase-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.store-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.purchase-date {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.purchase-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.purchase-total {
+    font-size: 1.05rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.expand-icon {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+.purchase-details {
+    border-top: 1px solid #eeeeee;
+    padding: 6px 20px 14px;
+    background: #fafafa;
+}
+
+.purchase-item {
+    display: grid;
+    grid-template-columns: 1fr 80px 100px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+    .purchase-item:last-child {
+        border-bottom: none;
+    }
+
+.item-name {
+    font-weight: 500;
+}
+
+.item-amount {
+    color: #777;
+    text-align: center;
+}
+
+.item-price {
+    text-align: right;
+    font-weight: 500;
+}
+
+.empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f8f8f8;
+    border-radius: 14px;
+    color: #777;
+}
+
+.no-items {
+    margin: 12px 0 0;
+    color: #777;
+}
